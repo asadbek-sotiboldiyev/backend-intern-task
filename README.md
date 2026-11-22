@@ -7,12 +7,23 @@ The embedding model and the LLM are mocked in `app/llm.py`, so you need no API k
 
 AI coding tools are allowed. In the interview you will explain your code and change it live, so make sure you understand every line.
 
+## Project Status: All Tasks Completed ✅
+
+- [x] **`chunk_text` in `app/chunking.py`**: Fully implemented with parameter validation and overlapping window slicing.
+- [x] **`GET /health`**: Verified working.
+- [x] **`POST /ingest`**: Implemented with validation (`422`), chunking, embedding generation, in-memory deduplication/replacement.
+- [x] **`POST /ask`**: Implemented with cosine similarity dot product ranking, `top_k` validation, `404` for empty store, and generation.
+- [x] **`GET /documents`**: Implemented returning sorted documents by `id` with accurate chunk counts.
+- [x] **`DELETE /documents/{doc_id}`**: Implemented returning `204` with empty body and `404` for missing documents.
+- [x] **Tests**: All public and expanded large-dataset tests passing.
+- [x] **`NOTES.md`**: Completed with design choices, future improvements, and AI tool usage.
+
 ## Setup
 
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pytest                      # run public tests
+pytest                      # run tests
 uvicorn app.main:app --reload   # optional: try it at http://localhost:8000/docs
 ```
 
@@ -24,7 +35,7 @@ uvicorn app.main:app --reload   # optional: try it at http://localhost:8000/docs
 - `app/main.py` must expose `create_app()`. Each call returns a new app with an empty store.
 - You may add files and modules under `app/`.
 
-## Part 1: `chunk_text` in `app/chunking.py`
+## Part 1: `chunk_text` in `app/chunking.py` [Completed ✅]
 
 `chunk_text(text, size=50, overlap=10) -> list[str]`
 
@@ -41,14 +52,14 @@ Example: 12 words `w0..w11`, `size=5`, `overlap=2`:
 ["w0 w1 w2 w3 w4", "w3 w4 w5 w6 w7", "w6 w7 w8 w9 w10", "w9 w10 w11"]
 ```
 
-## Part 2: API endpoints
+## Part 2: API endpoints [Completed ✅]
 
 All bodies are JSON. Use FastAPI's default `422` for invalid input.
 
-### `GET /health`
+### `GET /health` [Completed ✅]
 Already done. Returns `{"status": "ok"}`.
 
-### `POST /ingest`
+### `POST /ingest` [Completed ✅]
 
 ```json
 {"documents": [{"id": "doc1", "text": "..."}]}
@@ -61,7 +72,7 @@ Already done. Returns `{"status": "ok"}`.
 - Response `200`: `{"ingested": <number of documents>, "chunks": <total chunks created>}`
 - `422` when `documents` is missing or empty, when an `id` is empty, or when a `text` is empty or whitespace only.
 
-### `POST /ask`
+### `POST /ask` [Completed ✅]
 
 ```json
 {"question": "...", "top_k": 3}
@@ -84,7 +95,7 @@ Already done. Returns `{"status": "ok"}`.
 }
 ```
 
-### `GET /documents`
+### `GET /documents` [Completed ✅]
 
 Response `200`, sorted by `id`:
 
@@ -92,7 +103,7 @@ Response `200`, sorted by `id`:
 {"documents": [{"id": "doc1", "chunks": 2}]}
 ```
 
-### `DELETE /documents/{doc_id}`
+### `DELETE /documents/{doc_id}` [Completed ✅]
 
 - `204` with an empty body when deleted. Its chunks must no longer appear in `/ask`.
 - `404` when the document does not exist.
