@@ -1,0 +1,3 @@
+- **Design choices:** Stored chunk embeddings in an in-memory dictionary scoped to `create_app()` to avoid test state leaks, sliding windows by `size - overlap` for chunking, and ranking via dot-product cosine similarity with Pydantic validations.
+- **What to improve with more time:** Add an indexing structure like FAISS/HNSW for larger-scale vector searches.
+- **AI tools used:** Google Antigravity agent was used for debugging the test runner path resolution, code review, and implementing the chunking and API endpoints.
